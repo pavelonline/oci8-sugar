@@ -71,6 +71,7 @@
 						 
 (defmacro define-sql-command (name (statement (&rest bind-sqlt-type-sizes)
                                               (&rest define-sqlt-type-sizes)))
+	(remhash name *prepared-statements*)
 	(let ((vars (sql-variables statement)))
 		(alexandria:with-unique-names (get-statement tmp-func stmt call-iteration)
 			`(progn
@@ -96,8 +97,8 @@
 																						1)
 																:mode :commit-on-success)))
 				 ,(when define-sqlt-type-sizes
-								`(defun ,name ,vars
-									 (,tmp-func ,vars)
+								`(defun ,name (,@vars &key iterate-function)
+									 (,tmp-func ,@vars)
 									 (let ((,stmt (,get-statement)))
 										 (with-slots (defines) ,stmt
 											 (flet ((,call-iteration ()
@@ -118,7 +119,7 @@
 		 ,@body))
 
 
-(define-sql-command test-cur ("insert into pavel.test (id) values (:id)" ((:sqlt-int :int64)) ()))
+(define-sql-command test-cur ("select name from currency where id > :id" ((:sqlt-int :int64)) ((:sqlt-str :char :auto))))
 
 (defmacro select-all (func-name &rest bind-args)
   (alexandria:with-unique-names (result)
