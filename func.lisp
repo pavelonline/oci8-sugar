@@ -118,9 +118,6 @@
 	`(let ((*prepared-statements* nil))
 		 ,@body))
 
-
-(define-sql-command test-cur ("select name from currency where id > :id" ((:sqlt-int :int64)) ((:sqlt-str :char :auto))))
-
 (defmacro select-all (func-name &rest bind-args)
   (alexandria:with-unique-names (result)
     `(let ((,result))
