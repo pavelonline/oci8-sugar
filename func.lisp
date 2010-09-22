@@ -111,7 +111,7 @@
 															 (,call-iteration)))))))))))))
 
 (defmacro with-clear-statements (&body body)
-	`(let ((*prepared-statements* nil))
+	`(let ((*prepared-statements* (make-hash-table)))
 		 ,@body))
 
 (defmacro select-all (func-name &rest bind-args)
