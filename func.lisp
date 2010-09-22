@@ -63,10 +63,6 @@
 																			 (nth (1- i) lengths))
 																			(t size))))))))))
 
-(defun get-statement (name)
-	(or (gethash name *prepared-statements*)
-			(setf (gethash name *prepared-statements*) (make-in
-
 (defvar *statement-descriptions* (make-hash-table))
 						 
 (defmacro define-sql-command (name (statement (&rest bind-sqlt-type-sizes)
