@@ -44,16 +44,16 @@
 				(loop for var in vars
 						 for bind-record in bind-sqlt-type-sizes
 						 for i from 1 do
-						 (destructuring-bind (sqlt type &optional size)
+						 (destructuring-bind (sqlt type &optional size descriptor-type)
 								 bind-record
 							 (setf (elt binds (1- i))
-										 (bind-by-pos stmthp i type sqlt :size size))))))
+										 (bind-by-pos stmthp i type sqlt :size size :descriptor-type descriptor-type))))))
 		(when define-sqlt-type-sizes
 			(let ((lengths (columns-lengths stmthp)))
 				(setf defines (make-array (length define-sqlt-type-sizes)))
 				(loop for i from 1
 					 for def-record in define-sqlt-type-sizes do
-						 (destructuring-bind (sqlt type &optional size)
+						 (destructuring-bind (sqlt type &optional size handle-type)
 								 def-record
 							 (setf (elt defines (1- i))
 										 (define-by-pos stmthp i type sqlt
@@ -61,7 +61,8 @@
 																		(case size
 																			(:auto
 																			 (nth (1- i) lengths))
-																			(t size))))))))))
+																			(t size))
+                                    :descriptor-type handle-type))))))))
 
 (defvar *statement-descriptions* (make-hash-table))
 						 
